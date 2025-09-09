@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification - Awesome UI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Particle background -->
+    <div class="particles">
+        <div class="particle" style="left: 10%; animation-delay: 0s; width: 4px; height: 4px;"></div>
+        <div class="particle" style="left: 20%; animation-delay: 1s; width: 6px; height: 6px;"></div>
+        <div class="particle" style="left: 30%; animation-delay: 2s; width: 3px; height: 3px;"></div>
+        <div class="particle" style="left: 40%; animation-delay: 3s; width: 5px; height: 5px;"></div>
+        <div class="particle" style="left: 50%; animation-delay: 4s; width: 4px; height: 4px;"></div>
+        <div class="particle" style="left: 60%; animation-delay: 5s; width: 7px; height: 7px;"></div>
+        <div class="particle" style="left: 70%; animation-delay: 0.5s; width: 3px; height: 3px;"></div>
+        <div class="particle" style="left: 80%; animation-delay: 1.5s; width: 5px; height: 5px;"></div>
+        <div class="particle" style="left: 90%; animation-delay: 2.5s; width: 4px; height: 4px;"></div>
+    </div>
+
+    <!-- Main container -->
+    <div class="container">
+        <h1 class="form-title">🔐 OTP Verification</h1>
+        <p class="form-subtitle">Enter your details to receive a secure OTP</p>
+
+        <!-- Error message -->
+        <div class="error" id="errorMessage"></div>
+
+        <!-- Success message -->
+        <div class="success" id="successMessage"></div>
+
+        <form id="otpForm" method="POST" action="controller.php">
+            <input type="hidden" name="action" value="send_otp">
+
+            <!-- Name input -->
+            <div class="input-group">
+                <input type="text" 
+                       id="customer_name" 
+                       name="customer_name" 
+                       class="form-input" 
+                       placeholder=" " 
+                       required>
+                <label for="customer_name">Full Name</label>
+                <i class="fas fa-user input-icon"></i>
+            </div>
+
+            <!-- Email input -->
+            <div class="input-group">
+                <input type="email" 
+                       id="customer_email" 
+                       name="customer_email" 
+                       class="form-input" 
+                       placeholder=" " 
+                       required>
+                <label for="customer_email">Email Address</label>
+                <i class="fas fa-envelope input-icon"></i>
+            </div>
+
+            <!-- Mobile input -->
+            <div class="input-group">
+                <input type="tel" 
+                       id="mobile_number" 
+                       name="mobile_number" 
+                       class="form-input" 
+                       placeholder=" " 
+                       pattern="[0-9]{10}"
+                       maxlength="10"
+                       required>
+                <label for="mobile_number">Mobile Number</label>
+                <i class="fas fa-phone input-icon"></i>
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit" class="btnSubmit" id="sendOtpBtn">
+                <span>Send OTP</span>
+            </button>
+        </form>
+
+        <div class="form-footer">
+            <p>Secure & encrypted verification system</p>
+            <p><a href="#" onclick="return false;">Privacy Policy</a> | <a href="#" onclick="return false;">Terms of Service</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Add awesome interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('otpForm');
+            const submitBtn = document.getElementById('sendOtpBtn');
+            const inputs = document.querySelectorAll('.form-input');
+
+            // Add focus/blur effects for inputs
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focused');
+                });
+
+                input.addEventListener('blur', function() {
+                    if (!this.value) {
+                        this.parentElement.classList.remove('focused');
+                    }
+                });
+            });
+
+            // Form submission with loading effect
+            form.addEventListener('submit', function(e) {
+                submitBtn.classList.add('loading');
+                submitBtn.innerHTML = '<span>Sending OTP...</span>';
+
+                // Simulate loading (remove this in production)
+                setTimeout(() => {
+                    submitBtn.classList.remove('loading');
+                    submitBtn.innerHTML = '<span>Send OTP</span>';
+                }, 2000);
+            });
+
+            // Mobile number validation
+            const mobileInput = document.getElementById('mobile_number');
+            mobileInput.addEventListener('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, '');
+                if (this.value.length > 10) {
+                    this.value = this.value.slice(0, 10);
+                }
+            });
+
+            // Add ripple effect to button
+            submitBtn.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.classList.add('ripple');
+
+                this.appendChild(ripple);
+
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+
+        // Error/Success message functions
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+
+    <style>
+        /* Additional ripple effect CSS */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: ripple-effect 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-effect {
+            to {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+    </style>
+</body>
+</html>
